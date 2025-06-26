@@ -51,6 +51,7 @@ public class GuiComposer {
     stage.setOnCloseRequest(event -> {
       onInputOver(null);
     });
+    stage.setResizable(false);
     stage.setScene(new Scene(loader.load()));
     stage.show();
   }
