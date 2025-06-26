@@ -58,13 +58,12 @@ public class NumField {
 
   private void initMatrixWithDictionary() {
     int blockSize = (int) Math.floor(Math.sqrt(size));
-    int rowBlockNum = 0;
     for (int row = 0; row < size; row++) {
-      shiftDictionary(blockSize);
+      int shiftSize = blockSize;
       if (row > 0 && row % blockSize == 0) {
-        rowBlockNum++;
+        shiftSize++;
       }
-      shiftDictionary(blockSize + rowBlockNum);
+      shiftDictionary(shiftSize);
       matrix[row] = dictionary.stream().mapToInt(i -> i).toArray();
     }
   }
