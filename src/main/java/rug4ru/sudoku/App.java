@@ -11,14 +11,14 @@ import java.io.IOException;
  */
 public class App extends Application {
 
-    private GuiComposer guiComposer = GuiComposer.getInstance();
+  private GuiComposer guiComposer = GuiComposer.getInstance();
 
-    public static void main(String[] args) {
-        launch();
-    }
+  public static void main(String[] args) {
+    launch();
+  }
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        guiComposer.initGui(stage);
-    }
+  @Override
+  public void start(Stage stage) throws IOException {
+    guiComposer.initGui(stage);
+  }
 }

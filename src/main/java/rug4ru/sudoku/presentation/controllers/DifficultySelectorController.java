@@ -12,44 +12,44 @@ import rug4ru.sudoku.domain.Difficulty;
 import rug4ru.sudoku.presentation.GuiComposer;
 
 public class DifficultySelectorController {
-    private GuiComposer guiComposer = GuiComposer.getInstance();
+  private GuiComposer guiComposer = GuiComposer.getInstance();
 
-    @FXML
-    private VBox vbox;
+  @FXML
+  private VBox vbox;
 
-    @FXML
-    private Label messageLabel;
+  @FXML
+  private Label messageLabel;
 
-    @FXML
-    protected void initialize() {
-        //Setting size for the pane  
-        GridPane gridPane = new GridPane();    
-        gridPane.setHgap(10);
-        // gridPane.setMinSize(400, 200);
-        Difficulty.Level[] diffLevels = Difficulty.Level.values();
-        
-        for (int i = 0; i < diffLevels.length; i++) {
-            Difficulty.Level diffLevel = diffLevels[i];
-            String strName = diffLevel.name();
-            Button btn = new Button(strName);
-            btn.setOnAction(event -> {
-                try {
-                    onSelect(diffLevel);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            btn.isFocusTraversable();
-            btn.requestFocus();
-            gridPane.add(btn, i, 0);
+  @FXML
+  protected void initialize() {
+    // Setting size for the pane
+    GridPane gridPane = new GridPane();
+    gridPane.setHgap(10);
+    // gridPane.setMinSize(400, 200);
+    Difficulty.Level[] diffLevels = Difficulty.Level.values();
+
+    for (int i = 0; i < diffLevels.length; i++) {
+      Difficulty.Level diffLevel = diffLevels[i];
+      String strName = diffLevel.name();
+      Button btn = new Button(strName);
+      btn.setOnAction(event -> {
+        try {
+          onSelect(diffLevel);
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-        vbox.getChildren().add(gridPane);
-        vbox.requestFocus();
-
-        Platform.runLater(gridPane::requestFocus);
+      });
+      btn.isFocusTraversable();
+      btn.requestFocus();
+      gridPane.add(btn, i, 0);
     }
+    vbox.getChildren().add(gridPane);
+    vbox.requestFocus();
 
-    private void onSelect(Difficulty.Level diffLevel) throws IOException {
-        guiComposer.openMainScreen(diffLevel);
-    }
+    Platform.runLater(gridPane::requestFocus);
+  }
+
+  private void onSelect(Difficulty.Level diffLevel) throws IOException {
+    guiComposer.openMainScreen(diffLevel);
+  }
 }

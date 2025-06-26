@@ -13,87 +13,87 @@ import rug4ru.sudoku.domain.GameProcess;
 import rug4ru.sudoku.presentation.GuiComposer;
 
 public class MainScreenController {
-    public GuiComposer guiComposer = GuiComposer.getInstance();
-    public Difficulty.Level diffLevel = null;
+  public GuiComposer guiComposer = GuiComposer.getInstance();
+  public Difficulty.Level diffLevel = null;
 
-    private GameProcess gameProcess = null;
-    private List<List<Button>> buttonsList;
+  private GameProcess gameProcess = null;
+  private List<List<Button>> buttonsList;
 
-    private Integer selectedRow = null;
-    private Integer selectedCol = null;
-    GridPane numFieldGridPane = null;
+  private Integer selectedRow = null;
+  private Integer selectedCol = null;
+  GridPane numFieldGridPane = null;
 
-    @FXML
-    private VBox vbox;
+  @FXML
+  private VBox vbox;
 
-    @FXML
-    protected void initialize() {
-        Platform.runLater(() -> {
-            initGameProcess();
-            drawGui();
+  @FXML
+  protected void initialize() {
+    Platform.runLater(() -> {
+      initGameProcess();
+      drawGui();
+    });
+  }
+
+  public void setDifficultyLevel(Difficulty.Level _diffLevel) {
+    diffLevel = _diffLevel;
+  }
+
+  private void drawGui() {
+    int fieldSize = gameProcess.getNumFieldSize();
+    int blocksNum = (int) Math.sqrt(fieldSize);
+    int blocksSize = (int) fieldSize / blocksNum;
+
+    numFieldGridPane = new GridPane();
+
+    numFieldGridPane.setHgap(5);
+    numFieldGridPane.setVgap(5);
+
+    // generating blocks
+    List<List<GridPane>> blocksGridPanes = new ArrayList<List<GridPane>>();
+    for (int blockRow = 0; blockRow < blocksNum; blockRow++) {
+      List<GridPane> rowGridPanes = new ArrayList<GridPane>();
+      for (int blockCol = 0; blockCol < blocksNum; blockCol++) {
+        GridPane blockGridPane = new GridPane();
+        rowGridPanes.add(blockGridPane);
+        numFieldGridPane.add(blockGridPane, blockRow, blockCol);
+      }
+      blocksGridPanes.add(rowGridPanes);
+    }
+
+    for (int elementRow = 0; elementRow < fieldSize; elementRow++) {
+      int blockRow = (int) elementRow / blocksNum;
+      List<GridPane> gridPanesRow = blocksGridPanes.get(blockRow);
+
+      for (int elementCol = 0; elementCol < fieldSize; elementCol++) {
+        int blockCol = (int) elementCol / blocksNum;
+        GridPane blockGridPane = gridPanesRow.get(blockCol);
+
+        Integer value = gameProcess.getNumFieldValue(elementRow, elementCol);
+        String buttonText = value == null ? "  " : String.valueOf(value);
+        Button newBtn = new Button(buttonText);
+
+        final int r = elementRow;
+        final int c = elementCol;
+        newBtn.setOnAction(event -> {
+          selectElement(r, c);
         });
+        blockGridPane.add(newBtn, elementRow % blocksSize, elementCol % blocksSize);
+      }
     }
+    vbox.getChildren().add(numFieldGridPane);
+    Platform.runLater(guiComposer::updateStageSize);
+    Platform.runLater(numFieldGridPane::requestFocus);
+  }
 
-    public void setDifficultyLevel(Difficulty.Level _diffLevel) {
-        diffLevel = _diffLevel;
+  private void selectElement(int row, int col) {
+    selectedRow = row;
+    selectedCol = col;
+  }
+
+  private void initGameProcess() {
+    if (diffLevel == null) {
+      throw new NullPointerException("MainScreenController: diffLevel is null");
     }
-
-    private void drawGui() {
-        int fieldSize = gameProcess.getNumFieldSize();
-        int blocksNum = (int) Math.sqrt(fieldSize);
-        int blocksSize = (int) fieldSize / blocksNum;
-
-        numFieldGridPane = new GridPane();
-
-        numFieldGridPane.setHgap(5);
-        numFieldGridPane.setVgap(5);
-
-        // generating blocks
-        List<List<GridPane>> blocksGridPanes = new ArrayList<List<GridPane>>();
-        for (int blockRow = 0; blockRow < blocksNum; blockRow++) {
-            List<GridPane> rowGridPanes = new ArrayList<GridPane>();
-            for (int blockCol = 0; blockCol < blocksNum; blockCol++) {
-                GridPane blockGridPane = new GridPane();
-                rowGridPanes.add(blockGridPane);
-                numFieldGridPane.add(blockGridPane, blockRow, blockCol);
-            }
-            blocksGridPanes.add(rowGridPanes);
-        }
-
-        for (int elementRow = 0; elementRow < fieldSize; elementRow++) {
-            int blockRow = (int) elementRow / blocksNum;
-            List<GridPane> gridPanesRow = blocksGridPanes.get(blockRow);
-
-            for (int elementCol = 0; elementCol < fieldSize; elementCol++) {
-                int blockCol = (int) elementCol / blocksNum;
-                GridPane blockGridPane = gridPanesRow.get(blockCol);
-
-                Integer value = gameProcess.getNumFieldValue(elementRow, elementCol);
-                String buttonText = value == null ? "  " : String.valueOf(value);
-                Button newBtn = new Button(buttonText);
-
-                final int r = elementRow;
-                final int c = elementCol;
-                newBtn.setOnAction(event -> {
-                    selectElement(r, c);
-                });
-                blockGridPane.add(newBtn, elementRow % blocksSize, elementCol % blocksSize);
-            }
-        }
-        vbox.getChildren().add(numFieldGridPane);
-        Platform.runLater(guiComposer::updateStageSize);
-        Platform.runLater(numFieldGridPane::requestFocus);
-    }
-
-    private void selectElement(int row, int col) {
-        selectedRow = row;
-        selectedCol = col;
-    }
-
-    private void initGameProcess() {
-        if (diffLevel == null) {
-            throw new NullPointerException("MainScreenController: diffLevel is null");
-        }
-        gameProcess = new GameProcess(diffLevel);
-    }
+    gameProcess = new GameProcess(diffLevel);
+  }
 }
