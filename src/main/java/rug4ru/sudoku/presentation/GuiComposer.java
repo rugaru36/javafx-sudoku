@@ -26,13 +26,11 @@ public class GuiComposer {
   public void initGui(Stage _stage) throws IOException {
     rootStage = _stage;
     rootStage.setTitle("Sudoku");
-
+    // sets root scene
     openDifficultySelector();
+
     rootScene.getStylesheets().add("font.css");
-
-    rootStage.setScene(rootScene);
     rootStage.show();
-
     rootStage.setResizable(false);
   }
 
@@ -55,7 +53,6 @@ public class GuiComposer {
     stage.setResizable(false);
     stage.setAlwaysOnTop(true);
     stage.setScene(new Scene(loader.load()));
-    stage.getScene().getStylesheets().add("font.css");
     stage.show();
   }
 
@@ -79,6 +76,7 @@ public class GuiComposer {
     FXMLLoader loader = getFXMLLoader(screen);
     if (rootScene == null) {
       rootScene = new Scene(loader.load());
+      rootStage.setScene(rootScene);
     } else {
       rootScene.setRoot(loader.load());
     }
