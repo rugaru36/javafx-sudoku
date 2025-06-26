@@ -37,7 +37,6 @@ public class MainScreenController {
     Platform.runLater(() -> {
       updateStatus();
       drawNumField();
-      updateScreenSize();
       dropSelection();
     });
   }
@@ -129,10 +128,6 @@ public class MainScreenController {
       buttonRowsList.add(rowButtons);
     }
     vbox.getChildren().add(numFieldGridPane);
-  }
-
-  private void updateScreenSize() {
-    Platform.runLater(guiComposer::updateRootStageSize);
   }
 
   private void selectElement(int row, int col) throws IOException {

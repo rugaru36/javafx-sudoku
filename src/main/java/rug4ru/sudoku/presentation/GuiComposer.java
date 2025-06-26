@@ -2,6 +2,7 @@ package rug4ru.sudoku.presentation;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -67,11 +68,6 @@ public class GuiComposer {
     mainScreenController.dropSelection();
   }
 
-  public void updateRootStageSize() {
-    if (rootStage != null) {
-      rootStage.sizeToScene();
-    }
-  }
   private FXMLLoader getFXMLLoader(Screen screen) throws IOException {
     String screenName = screen.name();
     return new FXMLLoader(App.class.getResource(screenName + ".fxml"));
@@ -86,7 +82,9 @@ public class GuiComposer {
     }
     currentRootLoader = loader;
     currentScreen = screen;
-    updateRootStageSize();
+    Platform.runLater(() -> {
+      rootStage.sizeToScene();
+    });
   }
 
   // singleton
