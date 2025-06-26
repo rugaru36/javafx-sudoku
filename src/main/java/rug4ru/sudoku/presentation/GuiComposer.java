@@ -12,7 +12,9 @@ import rug4ru.sudoku.presentation.controllers.MainScreenController;
 
 public class GuiComposer {
   private Stage stage = null;
-  private Scene scene = null;
+  private Scene rootScene = null;
+
+  MainScreenController mainScreenController = null;
 
   public static enum Screen {
     difficultySelector,
@@ -24,10 +26,10 @@ public class GuiComposer {
     stage = _stage;
 
     FXMLLoader loader = getFXMLLoader(Screen.difficultySelector);
-    scene = new Scene(loader.load());
-    scene.getStylesheets().add("font.css");
+    rootScene = new Scene(loader.load());
+    rootScene.getStylesheets().add("font.css");
 
-    stage.setScene(scene);
+    stage.setScene(rootScene);
     stage.show();
 
     stage.setResizable(false);
@@ -38,9 +40,26 @@ public class GuiComposer {
   public void openMainScreen(Difficulty.Level diffLevel) throws IOException {
     FXMLLoader loader = getFXMLLoader(Screen.mainScreen);
     Parent parent = loader.load();
-    MainScreenController controller = loader.getController();
-    controller.initGameProcess(diffLevel);
-    scene.setRoot(parent);
+    mainScreenController = loader.getController();
+    mainScreenController.initGameProcess(diffLevel);
+    rootScene.setRoot(parent);
+  }
+
+  public void openInputScreen() throws IOException {
+    FXMLLoader loader = getFXMLLoader(Screen.inputValue);
+    Stage stage = new Stage();
+    stage.setScene(new Scene(loader.load(), 150, 150));
+    stage.show();
+    stage.setOnCloseRequest(event -> {
+      onInputOver(null);
+    });
+  }
+
+  public void onInputOver(Integer value) {
+    if (value != null) {
+      mainScreenController.onNewValue(value);
+    }
+    mainScreenController.dropSelection();
   }
 
   private FXMLLoader getFXMLLoader(Screen screen) throws IOException {
