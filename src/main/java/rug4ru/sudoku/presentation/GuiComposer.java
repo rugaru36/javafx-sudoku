@@ -39,7 +39,7 @@ public class GuiComposer {
     FXMLLoader loader = getFXMLLoader(Screen.mainScreen);
     Parent parent = loader.load();
     MainScreenController controller = loader.getController();
-    controller.setDifficultyLevel(diffLevel);
+    controller.initGameProcess(diffLevel);
     scene.setRoot(parent);
   }
 
@@ -53,11 +53,6 @@ public class GuiComposer {
       stage.sizeToScene();
     }
   }
-
-  // private void setRoot(Screen screen) throws IOException {
-  // System.out.println("on setRoot, fxml = " + screen.name());
-  // scene.setRoot(loadFXML(screen));
-  // }
 
   // singleton
   private static class SingletonHelper {

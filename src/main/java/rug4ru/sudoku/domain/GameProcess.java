@@ -3,12 +3,12 @@ package rug4ru.sudoku.domain;
 public class GameProcess {
   private NumField numField;
   private FillState fillState;
-  private Difficulty.DifficultyData difficultyData;
+  private Difficulty.DifficultyData currentStatus;
 
   public GameProcess(Difficulty.Level diffLevel) {
-    difficultyData = Difficulty.getDifficultyName(diffLevel);
+    currentStatus = Difficulty.getDifficultyName(diffLevel);
     numField = new NumField(true);
-    fillState = new FillState(difficultyData.unknownElements, numField.size, true);
+    fillState = new FillState(currentStatus.unknownElements, numField.size, true);
   }
 
   public boolean onNewValue(int value, int row, int col) {
@@ -18,16 +18,24 @@ public class GameProcess {
     }
     boolean isValueCorrect = value == numField.getValue(row, col);
     if (isValueCorrect) {
-      difficultyData.reduceUnknownElements();
+      currentStatus.reduceUnknownElements();
       fillState.removeUnknownElement(row, col);
     } else {
-      difficultyData.reduceMistakes();
+      currentStatus.reduceMistakes();
     }
     return isValueCorrect;
   }
 
+  public Difficulty.DifficultyData getCurrentStatus() {
+    return currentStatus;
+  }
+
   public int getNumFieldSize() {
     return numField.size;
+  }
+
+  public boolean checkIsActuallyUnknown(int row, int col) {
+    return fillState.checkIsUnknownElement(row, col);
   }
 
   public Integer getNumFieldValue(int row, int col) {

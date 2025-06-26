@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import rug4ru.sudoku.domain.Difficulty;
@@ -14,7 +15,7 @@ import rug4ru.sudoku.presentation.GuiComposer;
 
 public class MainScreenController {
   public GuiComposer guiComposer = GuiComposer.getInstance();
-  public Difficulty.Level diffLevel = null;
+  // public Difficulty.Level diffLevel = null;
 
   private GameProcess gameProcess = null;
   private List<List<Button>> buttonsList;
@@ -24,21 +25,34 @@ public class MainScreenController {
   GridPane numFieldGridPane = null;
 
   @FXML
+  private Label statusLabel;
+  @FXML
   private VBox vbox;
 
   @FXML
   protected void initialize() {
     Platform.runLater(() -> {
-      initGameProcess();
-      drawGui();
+      updateStatusLabel();
+      drawNumField();
     });
   }
 
-  public void setDifficultyLevel(Difficulty.Level _diffLevel) {
-    diffLevel = _diffLevel;
+  public void initGameProcess(Difficulty.Level diffLevel) {
+    if (diffLevel == null) {
+      throw new NullPointerException("MainScreenController: diffLevel is null");
+    }
+    gameProcess = new GameProcess(diffLevel);
   }
 
-  private void drawGui() {
+  private void updateStatusLabel() {
+    Difficulty.DifficultyData status = gameProcess.getCurrentStatus();
+    String level = "Difficulty level: " + status.name;
+    String toFill = "Left to fill: " + status.unknownElements;
+    String mistakes = "Left mistakes: " + status.mistakes;
+    statusLabel.setText(level + "\n" + toFill + "\n" + mistakes);
+  }
+
+  private void drawNumField() {
     int fieldSize = gameProcess.getNumFieldSize();
     int blocksNum = (int) Math.sqrt(fieldSize);
     int blocksSize = (int) fieldSize / blocksNum;
@@ -86,14 +100,13 @@ public class MainScreenController {
   }
 
   private void selectElement(int row, int col) {
+    boolean isActuallyUnknown = gameProcess.checkIsActuallyUnknown(row, col);
+    if (!isActuallyUnknown) {
+      return;
+    } else if (selectedRow != null && selectedCol != null) {
+      return;
+    }
     selectedRow = row;
     selectedCol = col;
-  }
-
-  private void initGameProcess() {
-    if (diffLevel == null) {
-      throw new NullPointerException("MainScreenController: diffLevel is null");
-    }
-    gameProcess = new GameProcess(diffLevel);
   }
 }
