@@ -53,6 +53,7 @@ public class GuiComposer {
       onInputOver(null);
     });
     stage.setResizable(false);
+    stage.setAlwaysOnTop(true);
     stage.setScene(new Scene(loader.load()));
     stage.show();
   }
