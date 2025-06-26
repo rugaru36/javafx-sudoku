@@ -34,11 +34,11 @@ public class Difficulty {
   public static DifficultyData getDifficultyName(Level name) {
     switch (name) {
       case Easy:
-        return new DifficultyData(10, 10, name.name());
+        return new DifficultyData(10, 15, name.name());
       case Mid:
-        return new DifficultyData(7, 20, name.name());
+        return new DifficultyData(7, 25, name.name());
       case Hard:
-        return new DifficultyData(4, 30, name.name());
+        return new DifficultyData(4, 35, name.name());
       default:
         return null;
     }
