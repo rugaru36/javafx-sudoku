@@ -10,6 +10,7 @@ import rug4ru.sudoku.App;
 import rug4ru.sudoku.domain.Difficulty;
 import rug4ru.sudoku.presentation.controllers.MainScreenController;
 
+// handles cross-screen logic
 public class GuiComposer {
   private Stage stage = null;
   private Scene rootScene = null;
