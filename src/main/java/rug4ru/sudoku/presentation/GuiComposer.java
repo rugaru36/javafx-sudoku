@@ -3,19 +3,18 @@ package rug4ru.sudoku.presentation;
 import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import rug4ru.sudoku.App;
 import rug4ru.sudoku.domain.Difficulty;
 import rug4ru.sudoku.presentation.controllers.MainScreenController;
 
-// handles cross-screen logic
+// handles cross-scene logic
 public class GuiComposer {
-  private Stage stage = null;
+  private Stage rootStage = null;
   private Scene rootScene = null;
-
-  MainScreenController mainScreenController = null;
+  private FXMLLoader currentRootLoader = null;
+  private Screen currentScreen = null;
 
   public static enum Screen {
     difficultySelector,
@@ -24,54 +23,69 @@ public class GuiComposer {
   }
 
   public void initGui(Stage _stage) throws IOException {
-    stage = _stage;
+    rootStage = _stage;
+    rootStage.setTitle("Sudoku");
 
-    FXMLLoader loader = getFXMLLoader(Screen.difficultySelector);
-    rootScene = new Scene(loader.load());
+    openDifficultySelector();
     rootScene.getStylesheets().add("font.css");
 
-    stage.setScene(rootScene);
-    stage.show();
+    rootStage.setScene(rootScene);
+    rootStage.show();
 
-    stage.setResizable(false);
+    rootStage.setResizable(false);
+  }
 
-    updateStageSize();
+  public void openDifficultySelector() throws IOException {
+    setRootScene(Screen.difficultySelector);
   }
 
   public void openMainScreen(Difficulty.Level diffLevel) throws IOException {
-    FXMLLoader loader = getFXMLLoader(Screen.mainScreen);
-    Parent parent = loader.load();
-    mainScreenController = loader.getController();
+    setRootScene(Screen.mainScreen);
+    MainScreenController mainScreenController = currentRootLoader.getController();
     mainScreenController.initGameProcess(diffLevel);
-    rootScene.setRoot(parent);
   }
 
   public void openInputScreen() throws IOException {
     FXMLLoader loader = getFXMLLoader(Screen.inputValue);
     Stage stage = new Stage();
-    stage.setScene(new Scene(loader.load(), 150, 150));
-    stage.show();
     stage.setOnCloseRequest(event -> {
       onInputOver(null);
     });
+    stage.setScene(new Scene(loader.load()));
+    stage.show();
   }
 
   public void onInputOver(Integer value) {
+    if (currentScreen != Screen.mainScreen) {
+      throw new RuntimeException("Current screen must be " + Screen.mainScreen.name());
+    }
+    MainScreenController mainScreenController = currentRootLoader.getController();
     if (value != null) {
       mainScreenController.onNewValue(value);
     }
     mainScreenController.dropSelection();
   }
 
+  public void updateRootStageSize() {
+    if (rootStage != null) {
+      rootStage.sizeToScene();
+    }
+  }
   private FXMLLoader getFXMLLoader(Screen screen) throws IOException {
     String screenName = screen.name();
     return new FXMLLoader(App.class.getResource(screenName + ".fxml"));
   }
 
-  public void updateStageSize() {
-    if (stage != null) {
-      stage.sizeToScene();
+  private void setRootScene(Screen screen) throws IOException {
+    FXMLLoader loader = getFXMLLoader(screen);
+    if (rootScene == null) {
+      rootScene = new Scene(loader.load());
+    } else {
+      rootScene.setRoot(loader.load());
     }
+    currentRootLoader = loader;
+    currentScreen = screen;
+    updateRootStageSize();
   }
 
   // singleton

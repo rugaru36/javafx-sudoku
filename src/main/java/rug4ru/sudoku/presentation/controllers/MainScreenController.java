@@ -49,6 +49,10 @@ public class MainScreenController {
     gameProcess = new GameProcess(diffLevel);
   }
 
+  public void restart() throws IOException {
+    guiComposer.openDifficultySelector();
+  }
+
   public void dropSelection() {
     selectedCol = null;
     selectedRow = null;
@@ -128,7 +132,7 @@ public class MainScreenController {
   }
 
   private void updateScreenSize() {
-    Platform.runLater(guiComposer::updateStageSize);
+    Platform.runLater(guiComposer::updateRootStageSize);
   }
 
   private void selectElement(int row, int col) throws IOException {

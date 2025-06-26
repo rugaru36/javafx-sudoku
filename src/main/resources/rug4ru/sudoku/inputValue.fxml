@@ -12,7 +12,8 @@
   <children>
     <Label fx:id="messageLabel" text="Input Value" />
 
-    <TextField fx:id="valueTextField" alignment="CENTER"/>
+<TextField fx:id="valueTextField" onAction="#onOk" alignment="CENTER"/>
+
     <Button fx:id="okButton" text="Ok" onAction="#onOk"/>
   </children>
   <padding>
