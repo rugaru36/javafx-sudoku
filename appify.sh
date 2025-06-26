@@ -23,4 +23,6 @@ mkdir -p "$DIR"
 cp "$1" "$DIR/$APPNAME"
 chmod +x "$DIR/$APPNAME"
 
+cp -r ./target/image/* "$APPNAME.app/Contents/MacOS"
+
 echo "$PWD/$APPNAME.app"
