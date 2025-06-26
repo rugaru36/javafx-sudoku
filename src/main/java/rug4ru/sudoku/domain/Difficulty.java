@@ -17,6 +17,18 @@ public class Difficulty {
             unknownElements = _unknownElements;
             name = _name;
         }
+
+        public void reduceMistakes() {
+          if (mistakes > 0) {
+            mistakes--;
+          }
+        }
+
+        public void reduceUnknownElements() {
+          if (unknownElements > 0) {
+            unknownElements--;
+          }
+        }
     }
 
     public static DifficultyData getDifficultyName(Level name) {
