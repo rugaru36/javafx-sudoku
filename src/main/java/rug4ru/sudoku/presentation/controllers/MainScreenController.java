@@ -21,7 +21,7 @@ public class MainScreenController {
 
     private Integer selectedRow = null;
     private Integer selectedCol = null;
-    GridPane mainGridPane = null;
+    GridPane numFieldGridPane = null;
 
     @FXML
     private VBox vbox;
@@ -34,15 +34,19 @@ public class MainScreenController {
         });
     }
 
+    public void setDifficultyLevel(Difficulty.Level _diffLevel) {
+        diffLevel = _diffLevel;
+    }
+
     private void drawGui() {
         int fieldSize = gameProcess.getNumFieldSize();
         int blocksNum = (int) Math.sqrt(fieldSize);
         int blocksSize = (int) fieldSize / blocksNum;
 
-        mainGridPane = new GridPane();
+        numFieldGridPane = new GridPane();
 
-        mainGridPane.setHgap(5);
-        mainGridPane.setVgap(5);
+        numFieldGridPane.setHgap(5);
+        numFieldGridPane.setVgap(5);
 
         // generating blocks
         List<List<GridPane>> blocksGridPanes = new ArrayList<List<GridPane>>();
@@ -51,7 +55,7 @@ public class MainScreenController {
             for (int blockCol = 0; blockCol < blocksNum; blockCol++) {
                 GridPane blockGridPane = new GridPane();
                 rowGridPanes.add(blockGridPane);
-                mainGridPane.add(blockGridPane, blockRow, blockCol);
+                numFieldGridPane.add(blockGridPane, blockRow, blockCol);
             }
             blocksGridPanes.add(rowGridPanes);
         }
@@ -76,13 +80,9 @@ public class MainScreenController {
                 blockGridPane.add(newBtn, elementRow % blocksSize, elementCol % blocksSize);
             }
         }
-        vbox.getChildren().add(mainGridPane);
+        vbox.getChildren().add(numFieldGridPane);
         Platform.runLater(guiComposer::updateStageSize);
-        Platform.runLater(mainGridPane::requestFocus);
-    }
-
-    public void initData(Difficulty.Level _diffLevel) {
-        diffLevel = _diffLevel;
+        Platform.runLater(numFieldGridPane::requestFocus);
     }
 
     private void selectElement(int row, int col) {

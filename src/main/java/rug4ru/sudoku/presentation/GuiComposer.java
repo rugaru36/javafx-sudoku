@@ -39,7 +39,7 @@ public class GuiComposer {
         FXMLLoader loader = getFXMLLoader(Screen.mainScreen);
         Parent parent = loader.load();
         MainScreenController controller = loader.getController();
-        controller.initData(diffLevel);
+        controller.setDifficultyLevel(diffLevel);
         scene.setRoot(parent);
     }
 
