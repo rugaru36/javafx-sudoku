@@ -11,6 +11,21 @@ public class GameProcess {
         fillState = new FillState(difficultyData.unknownElements, numField.size, true);
     }
 
+    public boolean onNewValue(int value, int row, int col) {
+        boolean isActuallyUnknown = fillState.checkIsUnknownElement(row, col);
+        if (!isActuallyUnknown) {
+            return false;
+        }
+        boolean isValueCorrect = value == numField.getValue(row, col);
+        if (isValueCorrect) {
+            difficultyData.reduceUnknownElements();
+            fillState.removeUnknownElement(row, col);
+        } else {
+            difficultyData.reduceMistakes();
+        }
+        return isValueCorrect;
+    }
+
     public int getNumFieldSize() {
         return numField.size;
     }
