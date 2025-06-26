@@ -8,31 +8,38 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import rug4ru.sudoku.App;
 import rug4ru.sudoku.domain.Difficulty;
 import rug4ru.sudoku.domain.GameProcess;
+import rug4ru.sudoku.presentation.GuiComposer;
 
 public class MainScreenController {
-    public static Difficulty.Level diffLevel = null;
+    public GuiComposer guiComposer = GuiComposer.getInstance();
+    public Difficulty.Level diffLevel = null;
 
     private GameProcess gameProcess = null;
     private List<List<Button>> buttonsList;
 
     private Integer selectedRow = null;
     private Integer selectedCol = null;
+    GridPane mainGridPane = null;
 
     @FXML
     private VBox vbox;
 
     @FXML
     protected void initialize() {
-        initGameProcess();
+        Platform.runLater(() -> {
+            initGameProcess();
+            drawGui();
+        });
+    }
 
+    private void drawGui() {
         int fieldSize = gameProcess.getNumFieldSize();
         int blocksNum = (int) Math.sqrt(fieldSize);
         int blocksSize = (int) fieldSize / blocksNum;
 
-        GridPane mainGridPane = new GridPane();
+        mainGridPane = new GridPane();
 
         mainGridPane.setHgap(5);
         mainGridPane.setVgap(5);
@@ -70,8 +77,12 @@ public class MainScreenController {
             }
         }
         vbox.getChildren().add(mainGridPane);
-        // Platform.runLater(App::updateStageSize);
+        Platform.runLater(guiComposer::updateStageSize);
         Platform.runLater(mainGridPane::requestFocus);
+    }
+
+    public void initData(Difficulty.Level _diffLevel) {
+        diffLevel = _diffLevel;
     }
 
     private void selectElement(int row, int col) {
@@ -80,9 +91,8 @@ public class MainScreenController {
     }
 
     private void initGameProcess() {
-        Difficulty.Level diffLevel = MainScreenController.diffLevel;
         if (diffLevel == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("MainScreenController: diffLevel is null");
         }
         gameProcess = new GameProcess(diffLevel);
     }

@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import rug4ru.sudoku.App;
+import rug4ru.sudoku.domain.Difficulty;
+import rug4ru.sudoku.presentation.controllers.MainScreenController;
 
 public class GuiComposer {
     private Stage stage = null;
@@ -21,7 +23,8 @@ public class GuiComposer {
     public void initGui(Stage _stage) throws IOException {
         stage = _stage;
 
-        scene = new Scene(loadFXML(Screen.difficultySelector));
+        FXMLLoader loader = getFXMLLoader(Screen.difficultySelector);
+        scene = new Scene(loader.load());
         scene.getStylesheets().add("font.css");
 
         stage.setScene(scene);
@@ -32,17 +35,29 @@ public class GuiComposer {
         updateStageSize();
     }
 
-    private Parent loadFXML(Screen screen) throws IOException {
-        String screenName = screen.name();
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(screenName + ".fxml"));
-        return fxmlLoader.load();
+    public void openMainScreen(Difficulty.Level diffLevel) throws IOException {
+        FXMLLoader loader = getFXMLLoader(Screen.mainScreen);
+        Parent parent = loader.load();
+        MainScreenController controller = loader.getController();
+        controller.initData(diffLevel);
+        scene.setRoot(parent);
     }
 
-    private void updateStageSize() {
+    private FXMLLoader getFXMLLoader(Screen screen) throws IOException {
+        String screenName = screen.name();
+        return new FXMLLoader(App.class.getResource(screenName + ".fxml"));
+    }
+
+    public void updateStageSize() {
         if (stage != null) {
             stage.sizeToScene();
         }
     }
+
+    // private void setRoot(Screen screen) throws IOException {
+    //     System.out.println("on setRoot, fxml = " + screen.name());
+    //     scene.setRoot(loadFXML(screen));
+    // }
 
     // singleton
     private static class SingletonHelper {

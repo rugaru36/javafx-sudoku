@@ -8,10 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import rug4ru.sudoku.App;
 import rug4ru.sudoku.domain.Difficulty;
+import rug4ru.sudoku.presentation.GuiComposer;
 
 public class DifficultySelectorController {
+    private GuiComposer guiComposer = GuiComposer.getInstance();
+
     @FXML
     private VBox vbox;
 
@@ -48,7 +50,6 @@ public class DifficultySelectorController {
     }
 
     private void onSelect(Difficulty.Level diffLevel) throws IOException {
-        MainScreenController.diffLevel = diffLevel;
-        // App.setRoot(App.Screen.mainScreen);
+        guiComposer.openMainScreen(diffLevel);
     }
 }
