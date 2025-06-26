@@ -70,7 +70,7 @@ public class MainScreenController {
             }
         }
         vbox.getChildren().add(mainGridPane);
-        Platform.runLater(App::updateStageSize);
+        // Platform.runLater(App::updateStageSize);
         Platform.runLater(mainGridPane::requestFocus);
     }
 

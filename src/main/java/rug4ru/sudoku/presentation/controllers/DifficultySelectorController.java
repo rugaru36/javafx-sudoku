@@ -49,6 +49,6 @@ public class DifficultySelectorController {
 
     private void onSelect(Difficulty.Level diffLevel) throws IOException {
         MainScreenController.diffLevel = diffLevel;
-        App.setRoot(App.Screen.mainScreen);
+        // App.setRoot(App.Screen.mainScreen);
     }
 }
